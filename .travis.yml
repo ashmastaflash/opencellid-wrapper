@@ -3,5 +3,11 @@ sudo: required
 python:
 - '2.7'
 install:
+- pip install pytest-cov codeclimate-test-reporter
 - pip install .
-script: py.test tests/
+script: py.test --cov=opencellid tests/
+after_install:
+- codeclimate-test-reporter --token ${CODECLIMATE_REPO_TOKEN}
+env:
+  global:
+    secure: bFP0qIs1SY99qTo1R/Iu8crrgwikNvhq4lCeDkNbFwYIa8PElVmxvoxRXssA3IS/Qf4QaHE5M61yCtzAZsW6IMD99RGLSxHr2URIVuF2YF9jQI5297I1ONtJ+HjqTEf/YeK9LtrEblX58N6tnqpFfH9TaluKb26FGHBC+GGCFS95KA3h3J1fvxixjaNgMJXYmzl/DZXF/cFuSQyHdU8iZ3j9OOaZaLhHeTgfPZixgXW+6/GfR/uJ/nGXsFUiBMyElf+zunOfJRRiozftOpkrM70Q5vBYgMqOoMCy0xPko0QWY3niOLzgYTf7qjrt8hljxaY7rNkMX0HO/v9ImkfM+7crW5OFP5PeaREjLDWMmNP9af/TW7iMRhyOQS2rOARRzbLQYWVd2qmgkFRwrNu0CuH28aROQG8TZzOM213WBLN4UBYZVpDadkNTAcA+eTutmZoRwUyEAoFYYinRaUJuuDJQhUqgsB2OWFF/1jOvkCvA6CKnP1tNKWpHq9yDJ9Pjce76LLDYo2otCUc/f1LyBZSMrKpDWjJR0buzx2sAXHS49C98bYjgrVhu7zKSEMI6SLKlS8kTJBv8xWb1SvBl8WSX8DVYNJ5U6yIJAa5fsUNbHeMcaWP3kaMUQD4aMhsirOKhwN/2ObYeLZIWfjE//QvgK4PRPkbrLQdhpTCv88g=
