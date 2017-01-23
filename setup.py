@@ -13,6 +13,10 @@ def get_version():
     ver = rx_compiled.search(raw_init_file).group(1)
     return ver
 
+def build_long_desc():
+    return "\n".join([read(f) for f in ["README.rst", "CHANGELOG.rst"]])
+
+
 setup(name = "opencellid",
       version = get_version(),
       author = "Ash Wilson",
@@ -23,4 +27,5 @@ setup(name = "opencellid",
       url = "https://github.com/ashmastaflash/opencellid-wrapper",
       packages = ["opencellid"],
       install_requires = ["requests"],
-      long_description = read("README.rst"))
+      long_description = build_long_desc(),
+      classifiers = ['Programming Language :: Python :: 2.7'])
