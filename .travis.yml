@@ -6,7 +6,7 @@ install:
 - pip install pytest-cov codeclimate-test-reporter
 - pip install .
 script: py.test --cov=opencellid tests/
-after_install:
+after_success:
 - codeclimate-test-reporter --token ${CODECLIMATE_REPO_TOKEN}
 env:
   global:
