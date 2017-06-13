@@ -1,8 +1,17 @@
 Changelog
 =========
 
-v1.0
+v1.2
 ----
+
+Changes
+~~~~~~~
+
+- Improved error handling for bad API token and rate limiting
+  situations. [Ash Wilson]
+
+v1.0 (2017-06-13)
+-----------------
 
 Changes
 ~~~~~~~
