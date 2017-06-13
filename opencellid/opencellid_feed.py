@@ -54,8 +54,24 @@ class OpenCellIdFeed(object):
                     if self.debug is True and totes_chunks % 1000000 == 0:
                         print("Downloaded %s from %s..." % (totes_chunks,
                                                             feed_source))
-        shutil.move(temp_file, self.ocid_feed_file)
-        print("OCID feed file written to %s" % self.ocid_feed_file)
+        try:
+            with gzip.open(temp_file, 'r') as feed_data:
+                consumer = csv.DictReader(feed_data)
+                consumer.next()
+            shutil.move(temp_file, self.ocid_feed_file)
+            print("OCID feed file written to %s" % self.ocid_feed_file)
+        except IOError:
+            rate_limit = 'RATE_LIMITED'
+            bad_token = 'INVALID_TOKEN'
+            with open(temp_file, 'r') as eggs_erroneous:
+                contents = eggs_erroneous.readline()
+            if rate_limit in contents:
+                print("Feed did not update... you're being rate-limited!")
+            elif bad_token in contents:
+                print("API token rejected by Unwired Labs!!")
+            else:
+                print("Non-specific error.  Details in %s" % temp_file)
+            raise
 
     def get_ocid_urls_from_mls_page(self):
         """Extracts OCID urls from MLS downloads page"""
