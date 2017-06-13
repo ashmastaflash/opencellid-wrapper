@@ -40,7 +40,7 @@ class OpenCellIdFeed(object):
             feed_source = "Unwired Labs"
         else:
             target_url = self.pick_ocid_url_from_list(
-                             self.get_ocid_urls_from_mls_page)
+                             self.get_ocid_urls_from_mls_page())
             response = requests.get(target_url, stream=True)
             feed_source = "Mozilla Location Services"
         temp_file = self.ocid_feed_file.replace('csv.gz', 'csv.gz.tmp')
