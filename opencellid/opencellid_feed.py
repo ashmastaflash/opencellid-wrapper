@@ -51,7 +51,7 @@ class OpenCellIdFeed(object):
                 if chunk:
                     feed_file.write(chunk)
                     totes_chunks += 1024
-                    if self.debug is True and totes_chunks % 10000 == 0:
+                    if self.debug is True and totes_chunks % 1000000 == 0:
                         print("Downloaded %s from %s..." % (totes_chunks,
                                                             feed_source))
         shutil.move(temp_file, self.ocid_feed_file)

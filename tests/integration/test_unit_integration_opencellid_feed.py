@@ -31,15 +31,20 @@ class TestIntagrationOpenCellIdFeed:
             print row
         assert row_count == 999
 
-    # def test_update_opencellid(self):
-    #    row_count = 0
-    #    ocid_obj = self.instantiate_opencellid_feed_object()
-    #    ocid_obj.debug = True
-    #    ocid_obj.update_feed()
-    #    for row in ocid_obj:
-    #        row_count += 1
-    #        print row
-    #    assert row_count > 100
+    def test_update_opencellid(self):
+        if os.getenv("TRAVIS_EVENT_TYPE") == "cron":
+            row_count = 0
+            ocid_obj = self.instantiate_opencellid_feed_object()
+            ocid_obj.debug = True
+            ocid_obj.update_feed()
+            for row in ocid_obj:
+                row_count += 1
+                if row_count % 1000000 == 0:
+                    print("Parsed %s from Unwired Labs feed..." % row_count)
+            assert row_count > 100
+        else:
+            print("Not a cron job, not testing against Unwired Labs.")
+            assert True
 
     def test_update_mls(self):
         row_count = 0
@@ -48,6 +53,6 @@ class TestIntagrationOpenCellIdFeed:
         ocid_obj.update_feed()
         for row in ocid_obj:
             row_count += 1
-            if row_count % 10000 == 0:
+            if row_count % 1000000 == 0:
                 print("Parsed %s from MLS feed..." % row_count)
         assert row_count > 100
