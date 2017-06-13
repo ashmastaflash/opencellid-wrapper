@@ -48,5 +48,6 @@ class TestIntagrationOpenCellIdFeed:
         ocid_obj.update_feed()
         for row in ocid_obj:
             row_count += 1
-            # print row
+            if row_count % 10000 == 0:
+                print("Parsed %s from MLS feed..." % row_count)
         assert row_count > 100
