@@ -8,6 +8,7 @@ import shutil
 
 class OpenCellIdFeed(object):
     def __init__(self, ocid_dir_path, ocid_api_key=None):
+        self.debug = False
         self.ocid_dir_path = ocid_dir_path
         self.ocid_api_key = ocid_api_key
         self.ocid_feed_file = os.path.join(ocid_dir_path, "cell_towers.csv.gz")
@@ -44,10 +45,15 @@ class OpenCellIdFeed(object):
             feed_source = "Mozilla Location Services"
         temp_file = self.ocid_feed_file.replace('csv.gz', 'csv.gz.tmp')
         print("Updating OpenCellID feed from %s." % feed_source)
+        totes_chunks = 0
         with open(temp_file, 'wb') as feed_file:
-            for chunk in response.iter_content(chunk_size=None):
+            for chunk in response.iter_content(chunk_size=1024):
                 if chunk:
                     feed_file.write(chunk)
+                    totes_chunks += 1024
+                    if self.debug is True and totes_chunks % 1000 == 0:
+                        print("Downloaded %s from %s..." % (totes_chunks,
+                                                            feed_source))
         shutil.move(temp_file, self.ocid_feed_file)
         print("OCID feed file written to %s" % self.ocid_feed_file)
 

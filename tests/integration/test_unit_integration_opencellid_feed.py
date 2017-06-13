@@ -34,6 +34,7 @@ class TestIntagrationOpenCellIdFeed:
     def test_update_opencellid(self):
         row_count = 0
         ocid_obj = self.instantiate_opencellid_feed_object()
+        ocid_obj.debug = True
         ocid_obj.update_feed()
         for row in ocid_obj:
             row_count += 1
@@ -43,6 +44,7 @@ class TestIntagrationOpenCellIdFeed:
     def test_update_mls(self):
         row_count = 0
         ocid_obj = self.instantiate_mls_feed_object()
+        ocid_obj.debug = True
         ocid_obj.update_feed()
         for row in ocid_obj:
             row_count += 1
