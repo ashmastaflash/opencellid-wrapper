@@ -12,9 +12,13 @@ integrations_path = os.path.join(herepath, "../fixtures")
 class TestIntagrationOpenCellIdFeed:
 
     def instantiate_opencellid_feed_object(self):
-        api_key = "I-am-an-api-key"
+        api_key = os.getenv('OCID_KEY')
         feed_dir_path = integrations_path
         return opencellid.OpenCellIdFeed(feed_dir_path, api_key)
+
+    def instantiate_mls_feed_object(self):
+        feed_dir_path = integrations_path
+        return opencellid.OpenCellIdFeed(feed_dir_path)
 
     def test_integration_instantiation(self):
         assert self.instantiate_opencellid_feed_object()
@@ -26,3 +30,21 @@ class TestIntagrationOpenCellIdFeed:
             row_count += 1
             print row
         assert row_count == 999
+
+    def test_update_opencellid(self):
+        row_count = 0
+        ocid_obj = self.instantiate_opencellid_feed_object()
+        ocid_obj.update_feed()
+        for row in ocid_obj:
+            row_count += 1
+            print row
+        assert row_count > 100
+
+    def test_update_mls(self):
+        row_count = 0
+        ocid_obj = self.instantiate_mls_feed_object()
+        ocid_obj.update_feed()
+        for row in ocid_obj:
+            row_count += 1
+            print row
+        assert row_count > 100

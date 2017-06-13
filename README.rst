@@ -22,15 +22,29 @@ This project is not associated with the OpenCellID project.  This is a utility
 package for downloading and parsing the OpenCellID database.
 
 
-Usage:
-------
+Usage (with API key from Unwired Labs):
+---------------------------------------
 
 ::
 
         import opencellid
         ocid_obj = opencellid.OpenCellIdFeed("/dir/for/feed/file/", "api_key")
         # Update OpenCellID feed from web:
-        ocid_obj.update_from_web()
+        ocid_obj.update_feed()
+        # Print all rows in OpenCellID feed:
+        for row in ocid_obj:
+            print row
+
+
+Usage (no API key, update from Mozilla Location Services):
+----------------------------------------------------------
+
+::
+
+        import opencellid
+        ocid_obj = opencellid.OpenCellIdFeed("/dir/for/feed/file/")
+        # Update OpenCellID feed from web:
+        ocid_obj.update_feed()
         # Print all rows in OpenCellID feed:
         for row in ocid_obj:
             print row
