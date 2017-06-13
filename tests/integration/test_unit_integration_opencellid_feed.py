@@ -28,7 +28,7 @@ class TestIntagrationOpenCellIdFeed:
         ocid_obj = self.instantiate_opencellid_feed_object()
         for row in ocid_obj:
             row_count += 1
-            print row
+            # print row
         assert row_count == 999
 
     def test_update_opencellid(self):
