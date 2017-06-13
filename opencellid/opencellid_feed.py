@@ -59,8 +59,7 @@ class OpenCellIdFeed(object):
 
     def get_ocid_urls_from_mls_page(self):
         """Extracts OCID urls from MLS downloads page"""
-        mls_downloads_page = ""
-        dl_page_contents = requests.get(mls_downloads_page).text
+        dl_page_contents = requests.get(self.mls_dl_page).text
         targets = []
         rxmatch = r'https://[A-Za-z0-9]+\.cloudfront\.net/export/MLS-full-cell-export-\d{4}-\d{2}-\d{2}T\d+\.csv.gz'  # NOQA
         for line in dl_page_contents.splitlines():
