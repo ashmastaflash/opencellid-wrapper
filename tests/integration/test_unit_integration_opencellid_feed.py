@@ -48,5 +48,5 @@ class TestIntagrationOpenCellIdFeed:
         ocid_obj.update_feed()
         for row in ocid_obj:
             row_count += 1
-            print row
+            # print row
         assert row_count > 100
