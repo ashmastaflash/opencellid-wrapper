@@ -1,9 +1,13 @@
 import csv
 import gzip
+import logging
 import os
 import re
 import requests
 import shutil
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class OpenCellIdFeed(object):
@@ -33,7 +37,7 @@ class OpenCellIdFeed(object):
         successful.
 
         """
-
+        log = logging.getLogger('feed_updater')
         if self.ocid_api_key is not None:
             params = {"token": self.ocid_api_key, "file": "cell_towers.csv.gz"}
             response = requests.get(self.ul_base, params=params, stream=True)
@@ -44,33 +48,34 @@ class OpenCellIdFeed(object):
             response = requests.get(target_url, stream=True)
             feed_source = "Mozilla Location Services"
         temp_file = self.ocid_feed_file.replace('csv.gz', 'csv.gz.tmp')
-        print("Updating OpenCellID feed from %s." % feed_source)
+        if self.debug:
+            log.debug("Updating OpenCellID feed from %s." % feed_source)
         totes_chunks = 0
         with open(temp_file, 'wb') as feed_file:
             for chunk in response.iter_content(chunk_size=1024):
                 if chunk:
                     feed_file.write(chunk)
                     totes_chunks += 1024
-                    if self.debug is True and totes_chunks % 1000000 == 0:
-                        print("Downloaded %s from %s..." % (totes_chunks,
-                                                            feed_source))
+                    if self.debug and totes_chunks % 1000000 == 0:
+                        log.debug("Downloaded %s from %s..." % (totes_chunks,
+                                                                feed_source))
         try:
             with gzip.open(temp_file, 'r') as feed_data:
                 consumer = csv.DictReader(feed_data)
                 consumer.next()
             shutil.move(temp_file, self.ocid_feed_file)
-            print("OCID feed file written to %s" % self.ocid_feed_file)
+            log.debug("OCID feed file written to %s" % self.ocid_feed_file)
         except IOError:
             rate_limit = 'RATE_LIMITED'
             bad_token = 'INVALID_TOKEN'
             with open(temp_file, 'r') as eggs_erroneous:
                 contents = eggs_erroneous.readline()
             if rate_limit in contents:
-                print("Feed did not update... you're being rate-limited!")
+                logging.error("Feed did not update. You're being rate-limited!")
             elif bad_token in contents:
-                print("API token rejected by Unwired Labs!!")
+                logging.error("API token rejected by Unwired Labs!!")
             else:
-                print("Non-specific error.  Details in %s" % temp_file)
+                logging.error("Non-specific error.  Details in %s" % temp_file)
             raise
 
     def get_ocid_urls_from_mls_page(self):
