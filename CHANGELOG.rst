@@ -1,8 +1,24 @@
 Changelog
 =========
 
-v1.2
+v1.3
 ----
+
+Changes
+~~~~~~~
+
+- Updated CodeClimate settings. [Ash Wilson]
+
+  Closes #3
+
+- Updated download URL for OpenCellID feed. [Ash Wilson]
+
+  Updated tests to avoid Travis-CI silence timeout.
+
+  Closes #2
+
+v1.2 (2017-06-13)
+-----------------
 
 Changes
 ~~~~~~~
