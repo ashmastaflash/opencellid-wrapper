@@ -21,6 +21,9 @@ OpenCellID Utils
 This project is not associated with the OpenCellID project.  This is a utility
 package for downloading and parsing the OpenCellID database.
 
+OpenCelliD Project is licensed under a Creative Commons Attribution-ShareAlike
+4.0 International License
+
 
 Usage (with API key from Unwired Labs)
 --------------------------------------
