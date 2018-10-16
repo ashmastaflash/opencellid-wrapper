@@ -45,7 +45,7 @@ class TestIntagrationOpenCellIdFeed:
                     log.debug("Parsed %s from Unwired Labs feed..." % row_count)
             assert row_count > 100
         else:
-            print("Not a cron job, not testing against Unwired Labs.")
+            log.info("Not a cron job, not testing against Unwired Labs.")
             assert True
 
     def test_update_mls(self):
