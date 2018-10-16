@@ -12,7 +12,7 @@ class OpenCellIdFeed(object):
         self.ocid_dir_path = ocid_dir_path
         self.ocid_api_key = ocid_api_key
         self.ocid_feed_file = os.path.join(ocid_dir_path, "cell_towers.csv.gz")
-        self.ul_base = "https://download.unwiredlabs.com/ocid/downloads"
+        self.ul_base = "https://opencellid.org/ocid/downloads"
         self.mls_dl_page = "https://location.services.mozilla.com/downloads"
 
     def __iter__(self):
