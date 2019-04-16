@@ -15,6 +15,7 @@ script:
 - "./cc-test-reporter after-build"
 deploy:
   provider: pypi
+  repo: ashmastaflash/opencellid-wrapper
   user: ashmastaflash
   on:
     tags: true
