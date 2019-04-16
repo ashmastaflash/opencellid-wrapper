@@ -1,11 +1,7 @@
-import imp
 import logging
 import os
 
-modulename = 'opencellid'
-modulepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../")
-file, pathname, description = imp.find_module(modulename, [modulepath])
-opencellid = imp.load_module(modulename, file, pathname, description)
+import opencellid
 
 herepath = os.path.dirname(os.path.abspath(__file__))
 integrations_path = os.path.join(herepath, "../fixtures")
