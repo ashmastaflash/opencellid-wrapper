@@ -1,17 +1,29 @@
+"""Manage OpenCellID feed."""
 import csv
 import gzip
 import logging
 import os
 import re
-import requests
 import shutil
+
+import requests
 
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 class OpenCellIdFeed(object):
+    """OpenCellID feed abstraction.
+
+    Args:
+        ocid_dir_path (str): Directory path for placing OpenCellID feed.
+        ocid_api_key (str): Optional. If set, we attempt to use the OpenCellID
+            feed. Otherwise, we retrieve the feed from Mozilla Location
+            Services.
+    """
+
     def __init__(self, ocid_dir_path, ocid_api_key=None):
+        """Initialize the feed."""
         self.debug = False
         self.ocid_dir_path = ocid_dir_path
         self.ocid_api_key = ocid_api_key
@@ -20,14 +32,14 @@ class OpenCellIdFeed(object):
         self.mls_dl_page = "https://location.services.mozilla.com/downloads"
 
     def __iter__(self):
-        """Yields dict objects for each row in the feed"""
-        with gzip.open(self.ocid_feed_file, 'r') as feed_data:
+        """Yield dict objects for each row in the feed."""
+        with gzip.open(self.ocid_feed_file, 'rt') as feed_data:
             consumer = csv.DictReader(feed_data)
             for row in consumer:
                 yield row
 
     def update_feed(self):
-        """Updates OpenCellID DB from remote source.
+        """Update OpenCellID DB from remote source.
 
         If the OpenCellID API key is configured when instantiating this class,
         the update will come from Unwired Labs.  Otherwise, it will come from
@@ -35,7 +47,6 @@ class OpenCellIdFeed(object):
 
         Downloads to a temp file first, and moves into place if download is
         successful.
-
         """
         log = logging.getLogger('feed_updater')
         if self.ocid_api_key is not None:
@@ -44,12 +55,12 @@ class OpenCellIdFeed(object):
             feed_source = "Unwired Labs"
         else:
             target_url = self.pick_ocid_url_from_list(
-                             self.get_ocid_urls_from_mls_page())
+                self.get_ocid_urls_from_mls_page())
             response = requests.get(target_url, stream=True)
             feed_source = "Mozilla Location Services"
         temp_file = self.ocid_feed_file.replace('csv.gz', 'csv.gz.tmp')
         if self.debug:
-            log.debug("Updating OpenCellID feed from %s." % feed_source)
+            log.debug("Updating OpenCellID feed from %s.", feed_source)
         totes_chunks = 0
         with open(temp_file, 'wb') as feed_file:
             for chunk in response.iter_content(chunk_size=1024):
@@ -57,29 +68,29 @@ class OpenCellIdFeed(object):
                     feed_file.write(chunk)
                     totes_chunks += 1024
                     if self.debug and totes_chunks % 1000000 == 0:
-                        log.debug("Downloaded %s from %s..." % (totes_chunks,
-                                                                feed_source))
+                        log.debug("Downloaded %s from "
+                                  "%s...", totes_chunks, feed_source)
         try:
-            with gzip.open(temp_file, 'r') as feed_data:
+            with gzip.open(temp_file, 'rt') as feed_data:
                 consumer = csv.DictReader(feed_data)
-                consumer.next()
+                _unused = consumer.fieldnames
             shutil.move(temp_file, self.ocid_feed_file)
-            log.debug("OCID feed file written to %s" % self.ocid_feed_file)
+            log.debug("OCID feed file written to %s", self.ocid_feed_file)
         except IOError:
             rate_limit = 'RATE_LIMITED'
             bad_token = 'INVALID_TOKEN'
             with open(temp_file, 'r') as eggs_erroneous:
                 contents = eggs_erroneous.readline()
             if rate_limit in contents:
-                logging.error("Feed did not update. You're being rate-limited!")
+                logging.error("Feed did not update. You're rate-limited!")
             elif bad_token in contents:
                 logging.error("API token rejected by Unwired Labs!!")
             else:
-                logging.error("Non-specific error.  Details in %s" % temp_file)
+                logging.error("Non-specific error.  Details in %s", temp_file)
             raise
 
     def get_ocid_urls_from_mls_page(self):
-        """Extracts OCID urls from MLS downloads page"""
+        """Extract OCID urls from MLS downloads page."""
         dl_page_contents = requests.get(self.mls_dl_page).text
         targets = []
         rxmatch = r'https://[A-Za-z0-9]+\.cloudfront\.net/export/MLS-full-cell-export-\d{4}-\d{2}-\d{2}T\d+\.csv.gz'  # NOQA
