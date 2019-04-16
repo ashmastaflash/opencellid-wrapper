@@ -31,4 +31,6 @@ setup(name="opencellid",
       packages=["opencellid"],
       install_requires=["requests"],
       long_description=build_long_desc(),
-      classifiers=['Programming Language :: Python :: 2.7'])
+      classifiers=['Programming Language :: Python :: 2.7'
+                   'Programming Language :: Python :: 3.6'
+                   'Programming Language :: Python :: 3.7'])
